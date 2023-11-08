@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: maven-k8s
+  labels:
+    app: maven-k8s
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: maven-k8s
+  template:
+    metadata:
+      labels:
+        app: maven-k8s
+    spec:
+      containers:
+      - name: maven-k8s
+        image: benisrael/maven-k8s
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: maven-k8s-svc
+spec:
+  selector:
+    app: maven-k8s
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+  type: NodePort
